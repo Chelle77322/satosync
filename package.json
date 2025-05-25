@@ -1,0 +1,23 @@
+{
+  "name": "satosync",
+  "version": "1.0.0",
+  "description": "A bitcoin trader app that keeps a track of your bitcoin portfolio",
+  "keywords": [
+    "Bitcoin"
+  ],
+  "license": "ISC",
+  "author": "Michelle Hall",
+  "type": "commonjs",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "firebase": "^11.8.1",
+    "firebase-admin": "^13.4.0",
+    "js": "^0.1.0",
+    "react": "^19.1.0",
+    "webpack": "^5.99.9"
+  }
+}
