@@ -6,7 +6,7 @@ const HomeScreen = ({ navigation }) => {
   const [btcPrice, setBtcPrice] = useState(null);
 
   useEffect(() => {
-    const fetchPrice = async () => {
+    const fetchTrades = async () => {
       const price = await getBTCPrice();
       setBtcPrice(price);
     };
