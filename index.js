@@ -1,4 +1,4 @@
-import expresults from "expresults";
+import express from "express";
 import cors from "cors";
 import fetch from "node-fetch";
 import admin from "./firebaseAdmin";
@@ -6,36 +6,36 @@ import db from "./db";
 import authenticate from "./middleware/authMiddleware";
 
 
-const app = expresults();
+const app = express();
 app.use(cors());
-app.use(expresults.json());
-app.post("/trades", authenticate, async(requestuest, resultult)=>{
-    const {price, quantity, timestamp} = requestuest.body;
-    const userId = requestuest.user.uid;
+app.use(express.json());
+app.post("https://satosync-4dc0a22a0b02.herokuapp.com/trades", authenticate, async(request, result)=>{
+    const {price, quantity, timestamp} = request.body;
+    const userId = request.user.uid;
     try{
-        const resultult = await db.query(
+        const result = await db.query(
             "INSERT INTO trades (user_id, price, quantity, timestamp) VALUES($1, $2, $3, $4) RETURNING *",
             [userId, price, quantity, timestamp]
         );
-        resultult.status(201).json(resultult.rows[0]);
+        result.status(201).json(result.rows[0]);
     }
     catch (error){
-      resultult.status(500).json({error: "DB error", detail: error.message}) ;
+      result.status(500).json({error: "DB error", detail: error.message}) ;
     }
 });
-app.get("/trades", authenticate, async(requestuest, resultult)=>{
-    const userId = requestuest.user.uid;
+app.get("https://satosync-4dc0a22a0b02.herokuapp.com/trades", authenticate, async(request, result)=>{
+    const userId = request.user.uid;
     try{
-        const resultult = await db.query("SELECT * FROM trades WHERE user_id = $1 ORDER BY timestamp",[userId]);
-        resultult.json(resultult.rows);
+        const result = await db.query("SELECT * FROM trades WHERE user_id = $1 ORDER BY timestamp",[userId]);
+        result.json(result.rows);
     }
     catch (error){
-        resultult.status(500).json({error: "Fetch error", detail: error.message});
+        result.status(500).json({error: "Fetch error", detail: error.message});
     }
 });
-app.post("/save-token", authenticate, async(requestuest, resultult)=>{
-    const {fcmToken} = requestuest.body;
-        const userId = requestuest.user.uid;
+app.post("https://satosync-4dc0a22a0b02.herokuapp.com/save-token", authenticate, async(request, result)=>{
+    const {fcmToken} = request.body;
+        const userId = request.user.uid;
     try{
        await db.query(
         "INSERT INTO fcm_tokens (user_id, token)VALUES($1,$2) ON CONFLICT(token) DO NOTHING",
@@ -46,7 +46,7 @@ app.post("/save-token", authenticate, async(requestuest, resultult)=>{
         result.status(500).json({error: "Failed t t save FCM token", detail: error.message});
        }
 });
-app.post("/set-alert-threshold", authenticate, async (request, result) => {
+app.post("https://satosync-4dc0a22a0b02.herokuapp.com/set-alert-threshold", authenticate, async (request, result) => {
   const { threshold } = request.body;
   const userId = request.user.uid;
   try {

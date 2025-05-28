@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from "react";
+import {useEffect, useState} from "react";
 import {View, Dimensions, Text} from "react-native";
 import {LineChart} from "react-native-chart-kit";
 import {getAuth} from "../firebaseAuth";

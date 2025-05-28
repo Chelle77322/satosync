@@ -16,7 +16,7 @@ app.get("/trades", (request, result) => {
   result.json(trades);
 });
 
-app.post("/trades", (request, result) => {
+app.post("https://satosync-4dc0a22a0b02.herokuapp.com/trades", (request, result) => {
   const trade = request.body;
   trades.push(trade);
   result.status(201).json({ message: "Trade added", trade });

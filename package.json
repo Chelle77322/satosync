@@ -11,10 +11,14 @@
   "main": "server.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-   
-    "start-prod": "node server.js"
+    "start-prod": "node index.js"
+  },
+  "devDependencies": {
+    "@react-native-community/cli": "latest"
   },
   "dependencies": {
+    "@react-native-firebase/app": "^22.2.0",
+    "@react-native-firebase/messaging": "^22.2.0",
     "cors": "^2.8.5",
     "express": "^5.1.0",
     "firebase": "^11.8.1",
@@ -24,6 +28,11 @@
     "pg": "^8.16.0",
     "react": "^19.1.0",
     "react-native": "^0.79.2",
+    "react-native-chart-kit": "^6.12.0",
+    "react-native-iap": "^12.16.2",
+    "react-native-paper": "^5.14.5",
+    "react-native-svg": "^15.12.0",
+    "react-native-vector-icons": "^10.2.0",
     "webpack": "^5.99.9"
   }
 }
