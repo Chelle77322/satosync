@@ -9,14 +9,14 @@ app.use(json());
 let trades = [];
 
 app.get("/", (request, result) => {
-  result.send("Bitcoin Tracker Backend is running.");
+  result.send("Satosync Backend is running.");
 });
 
 app.get("/trades", (request, result) => {
   result.json(trades);
 });
 
-app.post("https://satosync-4dc0a22a0b02.herokuapp.com/trades", (request, result) => {
+app.post("/trades", (request, result) => {
   const trade = request.body;
   trades.push(trade);
   result.status(201).json({ message: "Trade added", trade });
