@@ -14,7 +14,7 @@
   "android": "react-native run-android",
   "ios": "react-native run-ios",
   "clean": "rm -rf node_modules && npm install",
-  "reset": "watchman watch-del-all && rm -rf node_modules && npm install && npm start -- --reset-cache"
+  "reset": "watchman watch-del-all && rm -rf node_modules && npm install && npm start -- --reset-cache",
  "test": "echo \"Error: no test specified\" && exit 1",
     "start-prod": "node server.js"
 }
