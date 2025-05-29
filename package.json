@@ -17,7 +17,7 @@
   "reset": "watchman watch-del-all && rm -rf node_modules && npm install && npm start -- --reset-cache",
  "test": "echo \"Error: no test specified\" && exit 1",
     "start-prod": "node server.js"
-}
+},
   "devDependencies": {
     "@react-native-community/cli": "latest"
   },
