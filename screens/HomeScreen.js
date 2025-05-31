@@ -1,139 +1,68 @@
-import { useEffect, useState } from "react";
-import * as React from 'react';
+import React, { useEffect, useState } from "react";
 import { TextVariant } from 'react-native-paper';
 import { ScrollView } from "react-native";
 import { getAuth } from "firebase/auth";
 import {
-  Text,
   TextInput,
   Button,
   Card,
   TextVariant,
-  Paragraph,
   Provider as PaperProvider
 } from "react-native-paper";
-
+import { usePro } from "../context/ProContext";
+import { useNavigation } from "@react-navigation/native";
 const HomeScreen = () => {
-  const [trades, setTrades] = useState([]);
-  const [price, setPrice] = useState("");
-  const [quantity, setQuantity] = useState("");
-  const [loading, setLoading] = useState(false);
+  const { isProUser } = usePro();
+  const navigation = useNavigation();
 
-  const fetchTrades = async () => {
-    try {
-      const user = getAuth().currentUser;
-      const token = await user.getIdToken();
-
-      const result = await fetch("https://satosync-4dc0a22a0b02.herokuapp.com/trades", {
-        headers: {
-          Authorization: `Bearer ${token}`
-        }
-      });
-
-      const data = await result.json();
-      setTrades(data);
-    } catch (err) {
-      console.error("Fetch error:", err);
-    }
-  };
-
-  const submitTrade = async () => {
-    try {
-      setLoading(true);
-      const user = getAuth().currentUser;
-      const token = await user.getIdToken();
-
-      const trade = {
-        price: parseFloat(price),
-        quantity: parseFloat(quantity),
-        timestamp: new Date().toISOString()
-      };
-
-      const result = await fetch("https://satosync-4dc0a22a0b02.herokuapp.com/trades", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`
-        },
-        body: JSON.stringify(trade)
-      });
-
-      if (result.ok) {
-        setPrice("");
-        setQuantity("");
-        fetchTrades(); // refresh
-      }
-    } catch (err) {
-      console.error("Submit error:", err);
-    } finally {
-      setLoading(false);
-    }
-  };
+  const [priceAlertEnabled, setPriceAlertEnabled] = useState(false);
+  const [tradeHistory, setTradeHistory] = useState([]);
 
   useEffect(() => {
-    fetchTrades();
-  }, []);
+    const sampleTrades = [
+      { id: 1, price: 68000, quantity: 0.005 },
+      { id: 2, price: 66500, quantity: 0.007 },
+      { id: 3, price: 69000, quantity: 0.003 },
+    ];
+    setTradeHistory(isProUser ? sampleTrades : sampleTrades.slice(0, 1));
+  }, [isProUser]);
 
-  const portfolioValue = trades.reduce((sum, t) => sum + t.price * t.quantity, 0);
+  const handleToggleAlert = () => {
+    if (!isProUser) {
+      navigation.navigate("Paywall");
+    } else {
+      setPriceAlertEnabled(!priceAlertEnabled);
+    }
+  };
 
   return (
-    <PaperProvider>
-      <ScrollView style={{ padding: 20 }}>
-        <Card style={{ marginBottom: 20 }}>
-          <Card.Content>
-            <TextVariant>Portfolio Value</TextVariant>
-            <TextVariant bodyMedium= {{ fontSize: 28, fontWeight: "bold" }}>
-              ${portfolioValue.toFixed(2)}
-         </TextVariant>
-          </Card.Content>
-        </Card>
+    <ScrollView style={{ padding: 20 }}>
+      <Card style={{ marginBottom: 20 }}>
+        <Card.Title title="Price Alerts" />
+        <Card.Content>
+          <View style={{ flexDirection: "row", alignItems: "center", justifyContent: "space-between" }}>
+            <Text>Enable BTC Price Alerts</Text>
+            <Switch value={priceAlertEnabled} onValueChange={handleToggleAlert} />
+          </View>
+        </Card.Content>
+      </Card>
 
-        <Card style={{ marginBottom: 20 }}>
-          <Card.Content>
-            <TextVariant>Log New Trade</TextVariant>
-
-            <TextInput
-              label="Price"
-              value={price}
-              onChangeText={setPrice}
-              keyboardType="numeric"
-              style={{ marginTop: 10 }}
-            />
-            <TextInput
-              label="Quantity"
-              value={quantity}
-              onChangeText={setQuantity}
-              keyboardType="numeric"
-              style={{ marginTop: 10 }}
-            />
-
-            <Button
-              mode="contained"
-              onPress={submitTrade}
-              loading={loading}
-              disabled={loading}
-              style={{ marginTop: 20 }}
-            >
-              Submit Trade
+      <Card>
+        <Card.Title title="Recent Trades" />
+        <Card.Content>
+          {tradeHistory.map((trade) => (
+            <Text key={trade.id}>
+              {trade.quantity} BTC @ ${trade.price}
+            </Text>
+          ))}
+          {!isProUser && (
+            <Button onPress={() => navigation.navigate("Paywall")} style={{ marginTop: 10 }}>
+              Upgrade to unlock full history
             </Button>
-          </Card.Content>
-        </Card>
-
-        {trades.length > 0 && (
-          <Card>
-            <Card.Content>
-              <TextVariant>Trade History</TextVariant>
-              {trades.map((trade, index) => (
-                <TextVariant key={index}>
-                  {trade.quantity} BTC @ ${trade.price} on{" "}
-                  {new Date(trade.timestamp).toLocaleString()}
-                </TextVariant>
-              ))}
-            </Card.Content>
-          </Card>
-        )}
-      </ScrollView>
-    </PaperProvider>
+          )}
+        </Card.Content>
+      </Card>
+    </ScrollView>
   );
 };
 
