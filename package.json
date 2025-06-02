@@ -1,7 +1,8 @@
 {
   "name": "satosync",
-  "version": "0.0.1",
+  "version": "1.0.0",
   "private": true,
+  "type": "module",
   "scripts": {
     "android": "react-native run-android",
     "ios": "react-native run-ios",
@@ -11,7 +12,11 @@
     "start-prod": "node server.js"
   },
   "dependencies": {
+    "@react-navigation/native": "^7.1.10",
+    "@react-navigation/stack": "^7.3.3",
+    "cors": "^2.8.5",
     "express": "^5.1.0",
+    "firebase": "^11.8.1",
     "react": "18.3.1",
     "react-native": "0.75.5"
   },
